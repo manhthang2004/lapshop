@@ -46,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('change_password');
+Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change_password.submit');
+
 
 // Cart 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -65,4 +68,3 @@ Route::post('/voucher/apply', [CartController::class, 'applyVoucher'])->name('ap
 Route::get('/completed-order', [CartController::class, 'completedOrder'])->name('completed_order');
 Route::get('/cancelled-order', [CartController::class, 'cancelledOrder'])->name('cancelled_order');
 Route::get('/cancel-order/{id}', [CartController::class, 'cancelOrder'])->name('cancel_order');
-
