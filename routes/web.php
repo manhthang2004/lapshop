@@ -1,8 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,3 +74,20 @@ Route::get('/completed-order', [CartController::class, 'completedOrder'])->name(
 Route::get('/cancelled-order', [CartController::class, 'cancelledOrder'])->name('cancelled_order');
 Route::get('/cancel-order/{id}', [CartController::class, 'cancelOrder'])->name('cancel_order');
 
+//Admin
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('products', AdminProductController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('colors', ColorController::class);
+    Route::resource('admin/brands', BrandController::class);
+    Route::resource('vouchers', VoucherController::class);
+    Route::resource('banners', BannerController::class);
+
+    Route::resource('bills', BillController::class);
+
+    Route::post('bills/{id}/confirm', [BillController::class, 'confirm'])->name('bills.confirm');
+    Route::get('admin/bills/{id}/pdf', [BillController::class, 'generatePDF'])->name('bills.pdf');
+    Route::post('bills/{id}/send-invoice', [BillController::class, 'sendInvoice'])->name('bills.send-invoice');});

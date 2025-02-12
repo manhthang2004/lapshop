@@ -18,7 +18,7 @@
 <body>
     <div id="main-wrapper">
         <div class="nav-header">
-            <a href="{{ route('admin.index') }}" class="brand-logo">MT Store</a>
+            <a href="{{ route('admin.index') }}" class="brand-logo">Gang Store</a>
             <div class="nav-control">
                 <div class="hamburger">
                     <span class="line"></span><span class="line"></span><span class="line"></span>

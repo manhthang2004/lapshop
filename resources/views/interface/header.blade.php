@@ -85,10 +85,10 @@
             </li>
           @endif
           <li class="nav-item px-2 py-2 border-0">
-            <a class="nav-link text-uppercase text-dark" href="#">cách thanh toán</a>
+            <a class="nav-link text-uppercase text-dark" href="#">hướng dẫn thanh toán</a>
           </li>
           <li class="nav-item px-2 py-2 border-0">
-            <a class="nav-link text-uppercase text-dark" href="#">bảo hành</a>
+            <a class="nav-link text-uppercase text-dark" href="#">tra cứu bảo hành</a>
           </li>
         </ul>
       </div>

@@ -6,7 +6,7 @@
         <div class="col-md-4 col-lg-3">
             <div class="bg-light rounded p-4 shadow-sm">
                 <div class="text-center mb-4">
-                    <img src="{{ asset('img\user\IMG_2396.jpg') }}" alt="Avatar"
+                    <img src="{{ asset('img\user\avartar.jpg') }}" alt="Avatar"
                         class="img-fluid rounded-circle border border-3 border-primary" style="width: 120px; height: 120px; object-fit: cover;">
                 </div>
 
@@ -53,8 +53,6 @@
             <div class="bg-white rounded p-4 shadow-sm">
                 <h2 class="mb-4">Xin Chào, <span class="text-primary">{{ Auth::user()->name }}</span></h2>
                 <p class="mb-2"><strong>Email:</strong> <span class="text-secondary">{{ Auth::user()->email }}</span></p>
-                <p class="mb-2"><strong>Số Điện Thoại:</strong> <span class="text-secondary">{{ Auth::user()->tel }}</span></p>
-                <p class="mb-2"><strong>Địa Chỉ:</strong> <span class="text-secondary">{{ Auth::user()->address }}</span></p>
             </div>
         </div>
     </div>
