@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <title>MT Store - Trang Chủ</title>
+    <title>Gang Store - Trang Chủ</title>
 
     <div class="container mt-3 mb-5 p-0">
         <div class="row g-0">

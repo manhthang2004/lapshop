@@ -54,6 +54,9 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('change_password');
+Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change_password.submit');
+
 
 // Cart 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -74,8 +77,8 @@ Route::get('/completed-order', [CartController::class, 'completedOrder'])->name(
 Route::get('/cancelled-order', [CartController::class, 'cancelledOrder'])->name('cancelled_order');
 Route::get('/cancel-order/{id}', [CartController::class, 'cancelOrder'])->name('cancel_order');
 
-//Admin
 
+//Admin
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', AdminProductController::class);

@@ -29,7 +29,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('change_password') }}" class="nav-link d-flex align-items-center px-3 py-2">
+                        <a href="{{ route('change_password') }}" class="nav-link d-flex align-items-center px-3 py-2">
                             <i class="fas fa-key me-2"></i> Đổi Mật Khẩu
                         </a>
                     </li>
