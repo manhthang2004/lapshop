@@ -6,7 +6,6 @@
         @if (Auth::check())
             <div class="user-info">
                 <p>Chào, {{ Auth::user()->name }}!</p>
-                <!-- Thông tin người dùng -->
                 <div class="user-info">
                     <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
                     <p><strong>Số điện thoại:</strong> {{ Auth::user()->tel }}</p>
@@ -18,7 +17,6 @@
                 </form>
             </div>
         @else
-            <!-- Nếu chưa đăng nhập -->
             <div class="thung_chua sign-up-mode">
                 <div class="khuon_thung_chua">
                     <div class="signin-signup">
@@ -63,7 +61,6 @@
                             </div>
                         </form>
 
-                        <!-- Form Đăng Ký -->
                         <form action="{{ route('register') }}" method="post" class="sign-up-form">
                             @csrf
                             <h2 class="thuong_hieu">Đăng Ký</h2>
@@ -120,27 +117,12 @@
 
                             <input type="submit" name="register" class="nut" value="Đăng Ký" />
 
-                            <p class="social-text">Hoặc Đăng Ký Bằng</p>
-                            <div class="social-media">
-                                <a href="#" class="social-icon">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#" class="social-icon">
-                                    <i class="fab fa-google"></i>
-                                </a>
-                                <a href="#" class="social-icon">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" class="social-icon">
-                                    <i class="fab fa-linkedin-in"></i>
-                                </a>
-                            </div>
+                       
                         </form>
                     </div>
                 </div>
 
                 <div class="panels-thung_chua">
-                    <!-- Panel Trái -->
                     <div class="panel left-panel">
                         <div class="content">
                             <h3>Chưa Có Tài Khoản?</h3>
@@ -152,7 +134,6 @@
                         <img src="{{ asset('img/user/b.svg') }}" class="image" alt="" />
                     </div>
 
-                    <!-- Panel Phải -->
                     <div class="panel right-panel">
                         <div class="content">
                             <h3>Đã Có Tài Khoản?</h3>

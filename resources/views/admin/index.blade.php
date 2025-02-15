@@ -52,7 +52,7 @@
                 <ul class="metismenu" id="menu">
                     @if (auth()->check() && auth()->user()->role == 1)
                         <li class="nav-label first">Trang Chủ</li>
-                        <li><a href="{{ route('admin.index') }}" aria-expanded="false"><i class="fa-solid fa-cube"></i><span class="nav-text">Bảng Điều Khiển</span></a></li>
+                        <li><a href="{{ route('admin.chart.index') }}" aria-expanded="false"><i class="fa-solid fa-cube"></i><span class="nav-text">Bảng Điều Khiển</span></a></li>
                         <li class="nav-label">Quản Lý Cửa Hàng</li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-solid fa-microchip"></i><span class="nav-text">Danh Mục</span></a>
                             <ul aria-expanded="false">

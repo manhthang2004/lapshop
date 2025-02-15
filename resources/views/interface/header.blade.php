@@ -15,14 +15,12 @@
 </head>
 
 <body>
-  <!-- Tên Thương Hiệu -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white py-2">
     <div class="container d-flex flex-wrap justify-content-between">
       <a class="navbar-brand d-flex justify-content-between align-items-center order-lg-0" href="{{ route('product.index') }}">
         <span class="text-uppercase">Gang Store</span>
       </a>
 
-      <!-- Icon Tiện Ích -->
       <div class="order-lg-2 nav-btns d-flex flex-wrap align-items-center">
         <button id="toggleThis" type="button" class="btn position-relative">
           <i class="fa fa-search"></i>
