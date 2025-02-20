@@ -121,21 +121,19 @@ class ProductController extends Controller
             'product_id' => 'required|exists:products,id'
         ]);
     
-        $userId = Auth::check() ? Auth::id() : null;
-    
-        if (!$userId) {
-            return redirect()->route('product.show', $request->input('product_id'))
-                             ->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
+        if (!Auth::check()) {
+            return redirect()->guest(route('login'))->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
         }
     
         Comment::create([
-            'user_id' => $userId,
+            'user_id' => Auth::id(),
             'product_id' => $request->input('product_id'),
             'comment' => $request->input('comment'),
         ]);
     
-        return redirect()->route('product.show', $request->input('product_id'))
+        return redirect()->route('product.show', ['id' => $request->input('product_id')])
                          ->with('success', 'Bình luận đã được gửi thành công!');
-}
+    }
+    
 
 }

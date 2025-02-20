@@ -176,7 +176,6 @@
     <div id="comments" class="container mb-4 bg-white rounded-lg shadow-xl p-5">
         <h4 class="mb-4 text-center text-primary"><strong>Đánh Giá</strong></h4>
     
-        <!-- Danh sách bình luận -->
         <div class="comment-list mb-4">
             @forelse ($comments as $comment)
                 <div class="comment-item mb-4 p-4 border border-primary rounded-lg bg-light shadow-md transition-transform transform hover:scale-105">

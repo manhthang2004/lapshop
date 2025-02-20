@@ -93,7 +93,7 @@ Route::get('/cart/remove/{id_cart}/{color_id}', [CartController::class, 'remove'
 
 Route::get('/checkout', [CartController::class, 'showCheckout'])->name('cart.checkout');
 Route::post('/checkout', [CartController::class, 'processCheckout'])->name('cart.checkout.post');
-Route::get('/shipping-process', [CartController::class, 'shippingProcess'])->name('shipping_process');
+Route::get('/shipping_process', [CartController::class, 'shippingProcess'])->name('shipping_process');
 
 Route::post('/voucher/apply', [CartController::class, 'applyVoucher'])->name('apply_voucher');
 
