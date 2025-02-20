@@ -120,3 +120,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('bills/{id}/confirm', [BillController::class, 'confirm'])->name('bills.confirm');
     Route::get('admin/bills/{id}/pdf', [BillController::class, 'generatePDF'])->name('bills.pdf');
     Route::post('bills/{id}/send-invoice', [BillController::class, 'sendInvoice'])->name('bills.send-invoice');});
+
+
+
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
