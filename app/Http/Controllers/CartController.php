@@ -100,45 +100,63 @@ class CartController extends Controller
 }
 
     
-    public function showCheckout()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Bạn cần phải đăng nhập để thanh toán.');
+public function showCheckout(Request $request)
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Bạn cần phải đăng nhập để thanh toán.');
+    }
+
+    $cartItems = collect();
+    $totalAmount = 0;
+    $voucherCode = session('voucher_code', '');
+    $voucherDiscount = session('voucher_discount', 0);
+
+    // Nếu nhấn "Mua Ngay"
+    if ($request->input('action') === 'buy_now' && $request->has('product_id') && $request->has('quantity')) {
+        $product = Product::with('color')->find($request->product_id);
+
+        if (!$product) {
+            return redirect()->route('home')->with('error', 'Sản phẩm không tồn tại.');
         }
-    
+
+        $productPrice = $product->price - $product->discount;
+        $quantity = max(1, (int) $request->quantity);
+        $totalAmount = $productPrice * $quantity;
+
+        $cartItems->push((object) [
+            'id' => null,
+            'product' => $product,
+            'color' => $product->color,
+            'quantity' => $quantity,
+            'price' => $productPrice,
+        ]);
+    } else {
+        // Nếu không phải "Mua Ngay", lấy dữ liệu từ giỏ hàng
         $cart = Cart::where('id_user', Auth::id())->first();
-    
+
         if (!$cart) {
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
-    
+
         $cartItems = OtherCart::where('cart_id', $cart->id)->with('product', 'color')->get();
-    
-        $totalAmount = $cartItems->sum(function ($item) {
-            $productPrice = $item->product->price - $item->product->discount;
-            return $productPrice * $item->quantity;
-        });
-    
-        $voucherCode = session('voucher_code', '');
-        $voucherDiscount = session('voucher_discount', 0);
-    
-        $discountedTotal = $totalAmount;
-        if ($voucherDiscount > 0) {
-            $discountedTotal -= ($totalAmount * $voucherDiscount / 100);
-        }
-    
-        $method = 'cart.checkout.post'; 
-    
-        return view('cart.checkout', [
-            'cartItems' => $cartItems,
-            'totalAmount' => $totalAmount,
-            'voucherCode' => $voucherCode,
-            'voucherDiscount' => $voucherDiscount,
-            'discountedTotal' => $discountedTotal,
-            'method' => $method, 
-        ]);
+        $totalAmount = $cartItems->sum(fn($item) => ($item->product->price - $item->product->discount) * $item->quantity);
     }
-    
+
+    // Áp dụng mã giảm giá nếu có
+    $discountedTotal = $totalAmount;
+    if ($voucherDiscount > 0) {
+        $discountedTotal -= ($totalAmount * $voucherDiscount / 100);
+    }
+
+    return view('cart.checkout', [
+        'cartItems' => $cartItems,
+        'totalAmount' => $totalAmount,
+        'voucherCode' => $voucherCode,
+        'voucherDiscount' => $voucherDiscount,
+        'discountedTotal' => $discountedTotal,
+    ]);
+}
+
 
     public function processCheckout(Request $request)
     {

@@ -31,7 +31,7 @@
                                         <small class="text-muted">Màu: {{ $item->color->color_name }}</small><br>
                                         <small class="text-muted">Số Lượng: {{ $item->quantity }}</small>
                                     </div>
-                                    <span class="text-muted">{{ $totalItemPriceFormatted }}đ</span>
+                                    <span class="text-muted">{{ number_format($productPrice, 0 ,'.','.') }}đ</span>
                                 </li>
                             @empty
                                 <li class="list-group-item text-center">Giỏ hàng của bạn đang trống.</li>

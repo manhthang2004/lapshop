@@ -37,7 +37,7 @@
                                         <td>{{ $bill->address_user }}</td>
                                         <td>{{ $bill->date }}</td>
                                         <td>{{ number_format($bill->total, 0, '.', '.') }}đ</td>
-                                        <td>{{ $bill->status->status_name }}</td>
+                                        <td>{{ $bill->status->name }}</td>
                                         <td>
                                             <a href="{{ route('admin.bills.show', $bill->id) }}" class="btn btn-info">Xem Chi Tiết</a>
                                             <form action="{{ route('admin.bills.destroy', $bill->id) }}" method="POST" style="display:inline-block;">
