@@ -1,8 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ChartController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +36,8 @@ Route::post('/product/review', [ProductController::class, 'review'])->name('prod
 Route::post('/comments/submit', [ProductController::class, 'submitComment'])->name('submit_comment');
 Route::get('/sanpham/list', [ProductController::class, 'list'])->name('product.list');
 Route::post('/sanpham/filter', [ProductController::class, 'filter'])->name('product.filter');
+Route::get('/about', [ProductController::class, 'about'])->name('about');
+Route::get('/payment_guide', [ProductController::class, 'payment_guide'])->name('payment_guide');
 
 //Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
@@ -45,22 +56,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/index', [AuthController::class, 'showAdmin'])->name('admin.index');
         Route::get('/categories', [AuthController::class, 'categoriesIndex'])->name('admin.categories.index');
         Route::get('/categories/create', [AuthController::class, 'categoriesCreate'])->name('admin.categories.create');
-    
-    // Colors
-    Route::get('/colors', [AuthController::class, 'colorsIndex'])->name('admin.colors.index');
-    Route::get('/colors/create', [AuthController::class, 'colorsCreate'])->name('admin.colors.create');
-    
-    // Brands
-    Route::get('/brands', [AuthController::class, 'brandsIndex'])->name('admin.brands.index');
-    Route::get('/brands/create', [AuthController::class, 'brandsCreate'])->name('admin.brands.create');
-    
-    // Banners
-    Route::get('/banners', [AuthController::class, 'bannersIndex'])->name('admin.banners.index');
-    Route::get('/banners/create', [AuthController::class, 'bannersCreate'])->name('admin.banners.create');
+
+        // Colors
+        Route::get('/colors', [AuthController::class, 'colorsIndex'])->name('admin.colors.index');
+        Route::get('/colors/create', [AuthController::class, 'colorsCreate'])->name('admin.colors.create');
+
+        // Brands
+        Route::get('/brands', [AuthController::class, 'brandsIndex'])->name('admin.brands.index');
+        Route::get('/brands/create', [AuthController::class, 'brandsCreate'])->name('admin.brands.create');
+
+        // Banners
+        Route::get('/banners', [AuthController::class, 'bannersIndex'])->name('admin.banners.index');
+        Route::get('/banners/create', [AuthController::class, 'bannersCreate'])->name('admin.banners.create');
     });
     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
-    
+
     // Voucher
     Route::get('/vouchers', [CartController::class, 'voucherIndex'])->name('admin.vouchers.index');
     Route::get('/vouchers/create', [CartController::class, 'voucherCreate'])->name('admin.vouchers.create');
@@ -92,3 +103,23 @@ Route::post('/voucher/apply', [CartController::class, 'applyVoucher'])->name('ap
 Route::get('/completed-order', [CartController::class, 'completedOrder'])->name('completed_order');
 Route::get('/cancelled-order', [CartController::class, 'cancelledOrder'])->name('cancelled_order');
 Route::get('/cancel-order/{id}', [CartController::class, 'cancelOrder'])->name('cancel_order');
+
+
+//Admin
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('chart', ChartController::class);
+    Route::resource('products', AdminProductController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('colors', ColorController::class);
+    Route::resource('admin/brands', BrandController::class);
+    Route::resource('vouchers', VoucherController::class);
+    Route::resource('banners', BannerController::class);
+
+    Route::resource('bills', BillController::class);
+
+    Route::post('bills/{id}/confirm', [BillController::class, 'confirm'])->name('bills.confirm');
+    Route::get('admin/bills/{id}/pdf', [BillController::class, 'generatePDF'])->name('bills.pdf');
+    Route::post('bills/{id}/send-invoice', [BillController::class, 'sendInvoice'])->name('bills.send-invoice');
+});

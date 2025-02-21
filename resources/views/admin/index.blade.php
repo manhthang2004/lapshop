@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>MT Store - Admin</title>
+    <title>Gang Store - Admin</title>
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('vendor/owl-carousel/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/owl-carousel/css/owl.theme.default.min.css') }}">
@@ -18,7 +18,7 @@
 <body>
     <div id="main-wrapper">
         <div class="nav-header">
-            <a href="{{ route('admin.index') }}" class="brand-logo">MT Store</a>
+            <a href="{{ route('admin.index') }}" class="brand-logo">Gang Store</a>
             <div class="nav-control">
                 <div class="hamburger">
                     <span class="line"></span><span class="line"></span><span class="line"></span>
@@ -52,7 +52,7 @@
                 <ul class="metismenu" id="menu">
                     @if (auth()->check() && auth()->user()->role == 1)
                         <li class="nav-label first">Trang Chủ</li>
-                        <li><a href="{{ route('admin.index') }}" aria-expanded="false"><i class="fa-solid fa-cube"></i><span class="nav-text">Bảng Điều Khiển</span></a></li>
+                        <li><a href="{{ route('admin.chart.index') }}" aria-expanded="false"><i class="fa-solid fa-cube"></i><span class="nav-text">Bảng Điều Khiển</span></a></li>
                         <li class="nav-label">Quản Lý Cửa Hàng</li>
                         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-solid fa-microchip"></i><span class="nav-text">Danh Mục</span></a>
                             <ul aria-expanded="false">

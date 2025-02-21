@@ -31,7 +31,7 @@
                                             <th>Mô Tả</th>
                                             <th>Danh Mục</th>
                                             <th>Hãng</th>
-                                            <th>Màu Sắc</th> <!-- Thêm cột màu sắc -->
+                                            <th>Màu Sắc</th> 
                                             <th>Hành Động</th>
                                         </tr>
                                     </thead>

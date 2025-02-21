@@ -15,54 +15,52 @@
 </head>
 
 <body>
-  <!-- Tên Thương Hiệu -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white py-2">
     <div class="container d-flex flex-wrap justify-content-between">
       <a class="navbar-brand d-flex justify-content-between align-items-center order-lg-0" href="{{ route('product.index') }}">
         <span class="text-uppercase">Gang Store</span>
       </a>
 
-      <!-- Icon Tiện Ích -->
       <div class="order-lg-2 nav-btns d-flex flex-wrap align-items-center">
         <button id="toggleThis" type="button" class="btn position-relative">
-          <i class="fa fa-search"></i>
+          <i class="fa fa-search fs-4"></i>
         </button>
 
         @if(Auth::check())
-          @php
-            $countOrder = session('count_order', 0);
-            $countCart = session('count_cart', 0);
-          @endphp
-          <a href="{{route('shipping_process')}}">
-            <button type="button" class="btn position-relative">
-              <i class="fa-solid fa-truck-fast"></i>
-              <span id="orderCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">{{ $countOrder }}</span>
-            </button>
-          </a>
-          <a href="{{ route('cart.index') }}">
-            <button type="button" class="btn position-relative">
-              <i class="fa fa-shopping-cart"></i>
-              <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">{{ $countCart }}</span>
-            </button>
-          </a>
+        @php
+        $countOrder = session('count_order', 0);
+        $countCart = session('count_cart', 0);
+        @endphp
+        <a href="{{route('shipping_process')}}">
+          <button type="button" class="btn position-relative">
+            <i class="fa-solid fa-truck-fast fs-4"></i>
+            <span id="orderCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">{{ $countOrder }}</span>
+          </button>
+        </a>
+        <a href="{{ route('cart.index') }}">
+          <button type="button" class="btn position-relative">
+            <i class="fa fa-shopping-cart fs-4"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">{{ $countCart }}</span>
+          </button>
+        </a>
         @else
-          <a href="">
-            <button type="button" class="btn position-relative">
-              <i class="fa-solid fa-truck-fast"></i>
-              <span id="orderCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span>
-            </button>
-          </a>
-          <a href="{{ route('cart.index') }}">
-            <button type="button" class="btn position-relative">
-              <i class="fa fa-shopping-cart"></i>
-              <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span>
-            </button>
-          </a>
+        <a href="">
+          <button type="button" class="btn position-relative">
+            <i class="fa-solid fa-truck-fast fs-4"></i>
+            <span id="orderCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span>
+          </button>
+        </a>
+        <a href="{{ route('cart.index') }}">
+          <button type="button" class="btn position-relative">
+            <i class="fa fa-shopping-cart fs-4"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span>
+          </button>
+        </a>
         @endif
 
         <a href="{{ route('dashboard') }}">
           <button type="button" class="btn position-relative">
-            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-circle-user fs-4"></i>
           </button>
         </a>
       </div>
@@ -77,18 +75,18 @@
             <a class="nav-link text-uppercase text-dark" href="{{ route('product.list') }}">danh mục sản phẩm</a>
           </li>
           <li class="nav-item px-2 py-2">
-            <a class="nav-link text-uppercase text-dark" href="#">giới thiệu</a>
+            <a class="nav-link text-uppercase text-dark" href="{{ route('about') }}">giới thiệu</a>
           </li>
           @if(Auth::check())
-            <li class="nav-item px-2 py-2 border-0">
-              <a class="nav-link text-uppercase text-dark" href="#">Voucher</a>
-            </li>
+          <li class="nav-item px-2 py-2 border-0">
+            <a class="nav-link text-uppercase text-dark" href="#">Voucher</a>
+          </li>
           @endif
           <li class="nav-item px-2 py-2 border-0">
-            <a class="nav-link text-uppercase text-dark" href="#">cách thanh toán</a>
+            <a class="nav-link text-uppercase text-dark" href="{{ route('payment_guide') }}">hướng dẫn thanh toán</a>
           </li>
           <li class="nav-item px-2 py-2 border-0">
-            <a class="nav-link text-uppercase text-dark" href="#">bảo hành</a>
+            <a class="nav-link text-uppercase text-dark" href="#">tra cứu bảo hành</a>
           </li>
         </ul>
       </div>
@@ -106,7 +104,6 @@
     </form>
   </div>
 
-  
-  
 </body>
+
 </html>

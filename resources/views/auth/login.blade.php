@@ -5,7 +5,6 @@
     <div class="thung_chua sign-up-mode">
         <div class="khuon_thung_chua">
             <div class="signin-signup">
-                <!-- Form Đăng Nhập -->
                 <form action="{{ route('login') }}" method="post" class="sign-in-form">
                     @csrf
                     <h2 class="thuong_hieu">Đăng Nhập</h2>
@@ -25,7 +24,6 @@
                     @enderror
                     <input type="submit" value="Đăng Nhập" class="nut solid" />
                 </form>
-                <!-- Form Đăng Ký -->
                 <form action="{{ route('register') }}" method="post" class="sign-up-form">
                     @csrf
                     <h2 class="thuong_hieu">Đăng Ký</h2>
