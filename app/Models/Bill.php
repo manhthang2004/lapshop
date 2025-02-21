@@ -18,7 +18,7 @@ class Bill extends Model
         'address_user',
         'date',
         'total',
-        'payment',
+        'payment_name',
         'voucher',
         'id_status',
         'id_user'

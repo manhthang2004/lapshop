@@ -22,6 +22,7 @@
                     @error('password')
                         <span style="color: red; font-weight: bold;">{{ $message }}</span>
                     @enderror
+                    <a href="{{ route('password.request') }}" class="btn btn-link">Quên Mật Khẩu?</a>
                     <input type="submit" value="Đăng Nhập" class="nut solid" />
                 </form>
                 <form action="{{ route('register') }}" method="post" class="sign-up-form">

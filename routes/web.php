@@ -95,7 +95,7 @@ Route::get('/cart/remove/{id_cart}/{color_id}', [CartController::class, 'remove'
 
 Route::get('/checkout', [CartController::class, 'showCheckout'])->name('cart.checkout');
 Route::post('/checkout', [CartController::class, 'processCheckout'])->name('cart.checkout.post');
-Route::get('/shipping-process', [CartController::class, 'shippingProcess'])->name('shipping_process');
+Route::get('/shipping_process', [CartController::class, 'shippingProcess'])->name('shipping_process');
 
 Route::post('/voucher/apply', [CartController::class, 'applyVoucher'])->name('apply_voucher');
 
@@ -123,3 +123,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('admin/bills/{id}/pdf', [BillController::class, 'generatePDF'])->name('bills.pdf');
     Route::post('bills/{id}/send-invoice', [BillController::class, 'sendInvoice'])->name('bills.send-invoice');
 });
+Route::post('bills/{id}/send-invoice', [BillController::class, 'sendInvoice'])->name('bills.send-invoice');;
+
+
+
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');

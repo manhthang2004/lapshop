@@ -41,94 +41,122 @@ class CartController extends Controller
     }
     
     public function add(Request $request)
-    {
-        $userId = Auth::id();
-        $productId = $request->input('product_id');
-        $colorProductId = $request->input('color_product_id');
-        $quantity = $request->input('quantity');
-
-        if (!$colorProductId) {
-            return redirect()->back()->with('error', 'Vui lòng chọn màu sắc.');
-        }
-
-        $product = Product::find($productId);
-        if (!$product) {
-            return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
-        }
-
-        $colorProduct = ColorProduct::find($colorProductId);
-        if (!$colorProduct || $colorProduct->quantity < $quantity) {
-            return redirect()->back()->with('error', 'Số lượng không đủ.');
-        }
-
-        $cart = Cart::firstOrCreate(['id_user' => $userId]);
-
-        $cartItem = OtherCart::where('cart_id', $cart->id)
-            ->where('product_id', $productId)
-            ->where('color_id', $colorProductId)
-            ->first();
-
-        if ($cartItem) {
-            $cartItem->quantity += $quantity;
-            $cartItem->price = $product->price;
-            $cartItem->save();
-        } else {
-            OtherCart::create([
-                'cart_id' => $cart->id,
-                'product_id' => $productId,
-                'color_id' => $colorProductId,
-                'quantity' => $quantity,
-                'price' => $product->price,
-            ]);
-        }
-
-        if ($request->input('action') === 'buy_now') {
-            return redirect()->route('cart.checkout');
-        }
-
-        return redirect()->route('cart.index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng.');
+{
+    if (!Auth::check()) {
+        return redirect()->back()->with('error', 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
     }
 
+    $userId = Auth::id();
+    $productId = $request->input('product_id');
+    $colorProductId = $request->input('color_product_id');
+    $quantity = (int) $request->input('quantity');
 
-    public function showCheckout()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Bạn cần phải đăng nhập để thanh toán.');
+    if (!$colorProductId) {
+        return redirect()->back()->with('error', 'Vui lòng chọn màu sắc.');
+    }
+
+    $product = Product::find($productId);
+    if (!$product) {
+        return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+    }
+
+    $colorProduct = ColorProduct::find($colorProductId);
+    if (!$colorProduct || $colorProduct->quantity < $quantity) {
+        return redirect()->back()->with('error', 'Số lượng không đủ.');
+    }
+
+    if ($request->input('action') === 'buy_now') {
+        session()->put('buy_now', [
+            'product_id' => $productId,
+            'color_id' => $colorProductId,
+            'quantity' => $quantity,
+            'price' => $product->price,
+        ]);
+
+        return redirect()->route('cart.checkout');
+    }
+
+    $cart = Cart::firstOrCreate(['id_user' => $userId]);
+
+    $cartItem = OtherCart::where('cart_id', $cart->id)
+        ->where('product_id', $productId)
+        ->where('color_id', $colorProductId)
+        ->first();
+
+    if ($cartItem) {
+        $cartItem->quantity += $quantity;
+        $cartItem->save();
+    } else {
+        OtherCart::create([
+            'cart_id' => $cart->id,
+            'product_id' => $productId,
+            'color_id' => $colorProductId,
+            'quantity' => $quantity,
+            'price' => $product->price,
+        ]);
+    }
+
+    return redirect()->route('cart.index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng.');
+}
+
+    
+public function showCheckout(Request $request)
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Bạn cần phải đăng nhập để thanh toán.');
+    }
+
+    $cartItems = collect();
+    $totalAmount = 0;
+    $voucherCode = session('voucher_code', '');
+    $voucherDiscount = session('voucher_discount', 0);
+
+    // Nếu nhấn "Mua Ngay"
+    if ($request->input('action') === 'buy_now' && $request->has('product_id') && $request->has('quantity')) {
+        $product = Product::with('color')->find($request->product_id);
+
+        if (!$product) {
+            return redirect()->route('home')->with('error', 'Sản phẩm không tồn tại.');
         }
-    
+
+        $productPrice = $product->price - $product->discount;
+        $quantity = max(1, (int) $request->quantity);
+        $totalAmount = $productPrice * $quantity;
+
+        $cartItems->push((object) [
+            'id' => null,
+            'product' => $product,
+            'color' => $product->color,
+            'quantity' => $quantity,
+            'price' => $productPrice,
+        ]);
+    } else {
+        // Nếu không phải "Mua Ngay", lấy dữ liệu từ giỏ hàng
         $cart = Cart::where('id_user', Auth::id())->first();
-    
+
         if (!$cart) {
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
-    
+
         $cartItems = OtherCart::where('cart_id', $cart->id)->with('product', 'color')->get();
-    
-        $totalAmount = $cartItems->sum(function ($item) {
-            $productPrice = $item->product->price - $item->product->discount;
-            return $productPrice * $item->quantity;
-        });
-    
-        $voucherCode = session('voucher_code', '');
-        $voucherDiscount = session('voucher_discount', 0);
-    
-        $discountedTotal = $totalAmount;
-        if ($voucherDiscount > 0) {
-            $discountedTotal -= ($totalAmount * $voucherDiscount / 100);
-        }
-    
-        $method = 'cart.checkout.post'; 
-    
-        return view('cart.checkout', [
-            'cartItems' => $cartItems,
-            'totalAmount' => $totalAmount,
-            'voucherCode' => $voucherCode,
-            'voucherDiscount' => $voucherDiscount,
-            'discountedTotal' => $discountedTotal,
-            'method' => $method, 
-        ]);
+        $totalAmount = $cartItems->sum(fn($item) => ($item->product->price - $item->product->discount) * $item->quantity);
     }
-    
+
+    // Áp dụng mã giảm giá nếu có
+    $discountedTotal = $totalAmount;
+    if ($voucherDiscount > 0) {
+        $discountedTotal -= ($totalAmount * $voucherDiscount / 100);
+    }
+
+    return view('cart.checkout', [
+        'cartItems' => $cartItems,
+        'totalAmount' => $totalAmount,
+        'voucherCode' => $voucherCode,
+        'voucherDiscount' => $voucherDiscount,
+        'discountedTotal' => $discountedTotal,
+    ]);
+}
+
 
     public function processCheckout(Request $request)
     {
@@ -150,11 +178,36 @@ class CartController extends Controller
         try {
             $user = User::find(Auth::id());
             if ($user) {
-                $user->fill([
+                $user->update([
                     'tel' => $request->input('tel'),
                     'address' => $request->input('address')
                 ]);
-                $user->save();
+            }
+    
+            $cart = Cart::where('id_user', Auth::id())->first();
+            $cartItems = $cart ? OtherCart::where('cart_id', $cart->id)->get() : collect();
+    
+            if (session()->has('buy_now')) {
+                $buyNowItem = session()->get('buy_now');
+                $cartItems = collect([
+                    (object) [
+                        'product_id' => $buyNowItem['product_id'],
+                        'color_id' => $buyNowItem['color_id'],
+                        'quantity' => $buyNowItem['quantity'],
+                        'price' => $buyNowItem['price'],
+                    ]
+                ]);
+                session()->forget('buy_now');
+            }
+    
+            if ($cartItems->isEmpty()) {
+                return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
+            }
+    
+            $totalAmount = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+            $voucher = Voucher::where('code', $request->input('voucher_code'))->first();
+            if ($voucher) {
+                $totalAmount -= ($totalAmount * $voucher->discount / 100);
             }
     
             $bill = Bill::create([
@@ -162,40 +215,37 @@ class CartController extends Controller
                 'tel_user' => $request->input('tel'),
                 'address_user' => $request->input('address'),
                 'date' => now(),
-                'total' => $request->input('total_amount'),
+                'total' => $totalAmount,
                 'payment_name' => $request->input('payment_method'),
                 'voucher' => $request->input('voucher_code'),
                 'id_status' => 1, 
                 'id_user' => Auth::id(),
             ]);
     
-            $cart = Cart::where('id_user', Auth::id())->first();
-            if (!$cart) {
-                throw new \Exception('Cart not found.');
-            }
-    
-            $cartItems = OtherCart::where('cart_id', $cart->id)->get();
-    
             foreach ($cartItems as $item) {
-                if (!is_null($item->color_id) && !is_null($item->product_id)) {
-                    DB::table('other_bill')->insert([
-                        'id_bill' => $bill->id,
-                        'id_clp' => $item->color_id,
-                        'name_pro' => $item->product->pro_name,
-                        'color_product' => $item->color ? $item->color->color_name : 'Không xác định',
-                        'price_pro' => $item->price,
-                        'quantity_pro' => $item->quantity,
-                        'quantity_cart' => $item->quantity,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                } else {
-                    Log::error('Missing data for cart item', $item->toArray());
+                DB::table('other_bill')->insert([
+                    'id_bill' => $bill->id,
+                    'id_clp' => $item->color_id,
+                    'name_pro' => Product::find($item->product_id)->pro_name ?? 'Không xác định',
+                    'color_product' => ColorProduct::find($item->color_id)->color_name ?? 'Không xác định',
+                    'price_pro' => $item->price,
+                    'quantity_pro' => $item->quantity,
+                    'quantity_cart' => $item->quantity,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+    
+                $colorProduct = ColorProduct::find($item->color_id);
+                if ($colorProduct) {
+                    $colorProduct->quantity -= $item->quantity;
+                    $colorProduct->save();
                 }
             }
     
-            OtherCart::where('cart_id', $cart->id)->delete();
-            $cart->delete();
+            if (!session()->has('buy_now')) {
+                OtherCart::where('cart_id', $cart->id)->delete();
+                $cart->delete();
+            }
     
             DB::commit();
     
@@ -203,17 +253,15 @@ class CartController extends Controller
     
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error processing checkout', ['error' => $e->getMessage()]);
+            Log::error('Lỗi xử lý thanh toán', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi xử lý đơn hàng.');
         }
     }
-    
     
 
     public function shippingProcess()
     {
         $userId = Auth::id();
-        
         $bills = Bill::with(['voucher', 'otherBills.product', 'status'])
         ->where('id_user', auth()->id())
         ->get();
