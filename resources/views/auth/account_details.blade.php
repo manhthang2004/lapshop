@@ -5,14 +5,14 @@
             <div class="d-flex flex-column flex-shrink-0 p-0 flex-wrap"
                 style="width: 280px; border-radius: 5px 0px 0px 5px; background-color: white; border-right: 1px solid gainsboro; box-shadow: 1px 1px 5px black;">
 
-                <img src="duan/image_user/<?=$avatar?>" alt=""
+                <img src="duan/image_user/<?= $avatar ?>" alt=""
                     style="width: 100%; border-radius: 5px 0px 0px 5px;">
                 <ul class="nav nav-pills flex-column mb-auto">
 
                     <?php
                     if ($role > 0) {
                         # code...
-                        ?>
+                    ?>
 
                         <li class="nav-item">
                             <a href="./Duan/admin/index.php" class="nav-link link-dark ms-5">
@@ -20,7 +20,7 @@
                             </a>
                         </li>
 
-                        <?php
+                    <?php
                     }
                     ?>
                     <li>
