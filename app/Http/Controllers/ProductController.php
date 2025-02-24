@@ -110,47 +110,27 @@ class ProductController extends Controller
 
         ]);
     }
-
-
-
-
     public function submitComment(Request $request)
-    {
-        $request->validate([
-            'comment' => 'required|string|max:1000',
-            'product_id' => 'required|exists:products,id'
-        ]);
-<<<<<<< HEAD
+{
+    $request->validate([
+        'comment' => 'required|string|max:1000',
+        'product_id' => 'required|exists:products,id'
+    ]);
 
-        $userId = Auth::check() ? Auth::id() : null;
-
-        if (!$userId) {
-            return redirect()->route('product.show', $request->input('product_id'))
-                ->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
-=======
-    
-        if (!Auth::check()) {
-            return redirect()->guest(route('login'))->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
->>>>>>> 6cb4fa6b815f9489bc63c1120abc5f82490e5da2
-        }
-
-        Comment::create([
-            'user_id' => Auth::id(),
-            'product_id' => $request->input('product_id'),
-            'comment' => $request->input('comment'),
-        ]);
-<<<<<<< HEAD
-=======
-    
-        return redirect()->route('product.show', ['id' => $request->input('product_id')])
-                         ->with('success', 'Bình luận đã được gửi thành công!');
+    if (!Auth::check()) {
+        return redirect()->guest(route('login'))->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
     }
-    
->>>>>>> 6cb4fa6b815f9489bc63c1120abc5f82490e5da2
 
-        return redirect()->route('product.show', $request->input('product_id'))
-            ->with('success', 'Bình luận đã được gửi thành công!');
-    }
+    Comment::create([
+        'user_id' => Auth::id(),
+        'product_id' => $request->input('product_id'),
+        'comment' => $request->input('comment'),
+    ]);
+
+    return redirect()->route('product.show', ['id' => $request->input('product_id')])
+                     ->with('success', 'Bình luận đã được gửi thành công!');
+}
+
     public function about()
     {
         return view('product.about');
