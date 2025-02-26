@@ -21,7 +21,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-    
+
         if (Auth::attempt($credentials)) {
             // Đăng nhập thành công
             $user = Auth::user();
@@ -30,12 +30,12 @@ class AuthController extends Controller
             }
             return redirect()->route('dashboard');
         }
-    
+
         return redirect()->back()->withErrors([
             'email' => 'Thông tin đăng nhập không chính xác.',
         ]);
     }
-    
+
 
     public function dashboard()
     {
@@ -76,14 +76,12 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // Xác thực dữ liệu đầu vào
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        // Tạo người dùng mới
         User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
@@ -100,10 +98,8 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        // Validate email
         $request->validate(['email' => 'required|email|exists:users,email']);
-        
-        // Gửi email reset mật khẩu
+
         $response = Password::sendResetLink(
             $request->only('email')
         );
@@ -117,31 +113,27 @@ class AuthController extends Controller
 
     public function showChangePasswordForm()
     {
-        $role = Auth::user()->role;  // Lấy thông tin role của user đang đăng nhập
-        return view('auth.change_password', compact('role'));  // Truyền biến role vào view
+        $role = Auth::user()->role;  
+        return view('auth.change_password', compact('role'));  
     }
-    
 
-    // Xử lý thay đổi mật khẩu
+
 
     public function changePassword(Request $request)
     {
         $user = Auth::user();
-    
-        // Log mật khẩu hiện tại và mật khẩu cũ nhập vào để kiểm tra
+
         Log::info('Mật khẩu cũ trong cơ sở dữ liệu:', ['stored_password' => $user->password]);
         Log::info('Mật khẩu cũ người dùng nhập vào:', ['current_password' => $request->current_password]);
-    
-        // Kiểm tra mật khẩu cũ
+
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Mật khẩu cũ không đúng.']);
         }
-    
-        // Tiến hành thay đổi mật khẩu mới nếu đúng mật khẩu cũ
+
         DB::table('users')
             ->where('id', $user->id)
             ->update(['password' => Hash::make($request->new_password)]);
-    
+
         return redirect()->route('dashboard')->with('status', 'Mật khẩu đã được thay đổi thành công.');
     }
 
@@ -155,14 +147,12 @@ class AuthController extends Controller
         return view('auth.reset_password', compact('token'));
     }
 
-    // Gửi liên kết đặt lại mật khẩu
     public function sendResetLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
         ]);
 
-        // Gửi link đặt lại mật khẩu
         $status = Password::sendResetLink($request->only('email'));
 
         return $status == Password::RESET_LINK_SENT
@@ -170,7 +160,6 @@ class AuthController extends Controller
             : back()->withErrors(['email' => 'Không tìm thấy tài khoản với địa chỉ email này.']);
     }
 
-    // Xử lý cập nhật mật khẩu mới
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -178,7 +167,6 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        // Đặt lại mật khẩu
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
@@ -186,12 +174,10 @@ class AuthController extends Controller
                 $user->save();
             }
         );
-    
-        // Kiểm tra status và trả về thông báo
+
         if ($status == Password::PASSWORD_RESET) {
             return redirect()->route('login')->with('status', 'Mật khẩu đã được thay đổi thành công!');
         } else {
-            // Thêm thông tin chi tiết để dễ dàng debug
             return back()->withErrors(['email' => 'Đặt lại mật khẩu thất bại. Đảm bảo rằng liên kết và token là hợp lệ.']);
         }
     }

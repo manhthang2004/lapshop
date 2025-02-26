@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'BlueTech - Giỏ Hàng')
+@section('title', 'Gang Store - Giỏ Hàng')
 
 @section('content')
 <style>
@@ -176,65 +176,34 @@
         </a>
     </div>
     @foreach($bills as $bill)
-        @php
-            $other_bills = load_other_bill($bill->id_bill);
-            $total_format = number_format($bill->total, 0, '.', '.');
-            $new_date = date("Y-m-d", strtotime($bill->date . ' + 5 day'));
-        @endphp
-        <div class="card m-0 p-0 mt-3" style="box-shadow: 0px 0px 3px gainsboro;">
-            <div class="row d-flex justify-content-between px-3 top pt-3">
-                <div class="col-6">
-                    <h5>Mã Đơn Hàng: <span class="text-primary font-weight-bold">#{{ $bill->id_bill }}</span></h5>
-                    <p class="mb-0">Dự Kiến Giao Vào Ngày: <span>{{ $new_date }}</span></p>
-                    <p class="mb-0">Khách Hàng: <span>{{ $bill->name_user }}</span></p>
-                    <p class="mb-0">Địa Chỉ: <span>{{ $bill->address_user }}</span></p>
-                </div>
-                <div class="col-6 d-flex flex-column" style="align-items: end;">
-                    <h5>Sản Phẩm:<br>
-                        @foreach($other_bills as $other_bill)
-                            <span class="text-primary font-weight-bold">
-                                {{ $other_bill['name_pro'] }} {{ $other_bill['color_product'] }} X {{ $other_bill['quantity_pro'] }}
-                            </span><br>
-                        @endforeach
-                    </h5>
-                    <p class="mb-0">Hình Thức Thanh Toán: <span>{{ $bill->name_payment }}</span></p>
-                    <p class="mb-0">Tổng Thanh Toán: <span>{{ $total_format }}đ</span></p>
-                    <p class="mb-0">Trạng Thái: <span>{{ $bill->status->name }}</span></p>
-                </div>
+    @php
+        $total_format = number_format($bill->total, 0, '.', '.');
+        $new_date = date("Y-m-d", strtotime($bill->date . ' + 5 day'));
+    @endphp
+    <div class="card m-0 p-0 mt-3" style="box-shadow: 0px 0px 3px gainsboro;">
+        <div class="row d-flex justify-content-between px-3 top pt-3">
+            <div class="col-6">
+                <h5>Mã Đơn Hàng: <span class="text-primary font-weight-bold">#{{ $bill->id }}</span></h5>
+                <p class="mb-0">Dự Kiến Giao Vào Ngày: <span>{{ $new_date }}</span></p>
+                <p class="mb-0">Khách Hàng: <span>{{ $bill->name_user }}</span></p>
+                <p class="mb-0">Địa Chỉ: <span>{{ $bill->address_user }}</span></p>
             </div>
-            <!-- Add class 'active' to progress -->
-            <div class="row d-flex justify-content-center mt-5">
-                <div class="col-12">
-                    <ul id="progressbar" class="text-center d-flex justify-content-center">
-                        <li class="{{ $bill->status > 0 ? 'active' : '' }} step0"></li>
-                        <li class="{{ $bill->status > 1 ? 'active' : '' }} step0"></li>
-                        <li class="{{ $bill->status > 2 ? 'active' : '' }} step0"></li>
-                    </ul>
-                </div>
+            <div class="col-6 d-flex flex-column" style="align-items: end;">
+                <h5>Sản Phẩm:<br>
+                    @foreach($bill->otherBills as $other_bill)
+                        <span class="text-primary font-weight-bold">
+                            {{ $other_bill->name_pro }} {{ $other_bill->color_product }} X {{ $other_bill->quantity_pro }}
+                        </span><br>
+                    @endforeach
+                </h5>
+                <p class="mb-0">Hình Thức Thanh Toán: <span>{{ $bill->payment_name }}</span></p>
+                <p class="mb-0">Tổng Thanh Toán: <span>{{ $total_format }}đ</span></p>
+                <p class="mb-0">Trạng Thái: <span>{{ $bill->status->name }}</span></p>
             </div>
-            <div class="row p-0 m-0 top justify-content-between m-5">
-                <div class="col-3 d-flex flex-wrap icon-content p-0 d-flex justify-content-center align-items-center">
-                    <img class="icon" src="https://i.imgur.com/9nnc9Et.png">
-                    <div>
-                        <p class="m-0">Đơn Hàng <br>Chờ Xác Nhận</p>
-                    </div>
-                </div>
-                <div class="col-3 d-flex flex-wrap icon-content p-0 d-flex justify-content-center align-items-center">
-                    <img class="icon" src="https://i.imgur.com/u1AzR7w.png">
-                    <div>
-                        <p class="m-0">Đã Được Bàn Giao<br>Cho Đơn Vị Vận Chuyển</p>
-                    </div>
-                </div>
-                <div class="col-3 d-flex flex-wrap icon-content p-0 d-flex justify-content-center align-items-center">
-                    <img class="icon" src="https://i.imgur.com/HdsziHP.png">
-                    <div>
-                        <p class="m-0">Đơn Hàng<br>Đã Đến</p>
-                    </div>
-                </div>
-            </div>
-            <span class="btn-cancel"> Đơn Hàng Đã Được Hoàn Thành </span>
         </div>
-    @endforeach
+    </div>
+@endforeach
+
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>

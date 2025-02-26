@@ -261,9 +261,19 @@
 
             @if ($bill->id_status == 1)
                 <a href="{{ route('cancel_order', ['id'=> $bill->id]) }}" onclick="return confirm('Bạn có chắc là muốn hủy đơn hàng không?');" class="btn-cancel">Hủy Đơn Hàng</a>
+            @elseif ($bill->id_status == 0)
+                <span class="btn-cancel">Đơn Hàng Đã Bị Hủy</span>
             @else
                 <span class="btn-cant-cancel">Đơn Hàng Đã Được Xác Nhận Không Thể Hủy</span>
             @endif
+            @if ($bill->id_status == 2)
+                <a href="{{ route('confirm_received', ['id' => $bill->id]) }}" 
+                    onclick="return confirm('Bạn có chắc chắn đã nhận được hàng không?');" 
+                    class="btn-cancel">
+                    Xác Nhận Đã Nhận Hàng
+                </a>
+@endif
+
         </div>
     @endforeach
 </div>

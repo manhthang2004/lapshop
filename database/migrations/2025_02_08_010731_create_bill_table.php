@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('payment_name'); 
             $table->string('voucher')->nullable(); 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

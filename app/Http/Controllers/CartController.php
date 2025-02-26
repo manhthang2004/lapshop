@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\ColorProduct;
 use App\Models\OtherCart;
 use App\Models\Product;
+use App\Models\Status;
 use App\Models\User;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
@@ -189,12 +190,13 @@ public function showCheckout(Request $request)
     
             if (session()->has('buy_now')) {
                 $buyNowItem = session()->get('buy_now');
+                $product = Product::find($buyNowItem['product_id']);
                 $cartItems = collect([
                     (object) [
                         'product_id' => $buyNowItem['product_id'],
                         'color_id' => $buyNowItem['color_id'],
                         'quantity' => $buyNowItem['quantity'],
-                        'price' => $buyNowItem['price'],
+                        'price' => $product ? ($product->price - $product->discount) : $buyNowItem['price'],
                     ]
                 ]);
                 session()->forget('buy_now');
@@ -204,7 +206,7 @@ public function showCheckout(Request $request)
                 return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
             }
     
-            $totalAmount = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+            $totalAmount = $cartItems->sum(fn($item) => ($item->product->price - $item->product->discount) * $item->quantity);
             $voucher = Voucher::where('code', $request->input('voucher_code'))->first();
             if ($voucher) {
                 $totalAmount -= ($totalAmount * $voucher->discount / 100);
@@ -221,14 +223,16 @@ public function showCheckout(Request $request)
                 'id_status' => 1, 
                 'id_user' => Auth::id(),
             ]);
+            
     
             foreach ($cartItems as $item) {
+                $product = Product::find($item->product_id);
                 DB::table('other_bill')->insert([
                     'id_bill' => $bill->id,
                     'id_clp' => $item->color_id,
                     'name_pro' => Product::find($item->product_id)->pro_name ?? 'Không xác định',
                     'color_product' => ColorProduct::find($item->color_id)->color_name ?? 'Không xác định',
-                    'price_pro' => $item->price,
+                    'price_pro' => $product ? ($product->price - $product->discount) : 0,
                     'quantity_pro' => $item->quantity,
                     'quantity_cart' => $item->quantity,
                     'created_at' => now(),
@@ -262,68 +266,85 @@ public function showCheckout(Request $request)
     public function shippingProcess()
     {
         $userId = Auth::id();
-        $bills = Bill::with(['voucher', 'otherBills.product', 'status'])
-        ->where('id_user', auth()->id())
-        ->get();
-
-        $count = $bills->count();
         
-        return view('cart.shipping_process', compact('bills', 'count'));
-    }
-    
-
-
-    public function completedOrder()
-    {
-        $userId = Auth::id();
-    
-        $bills = Bill::where('id_user', $userId)
-            ->where('id_status', 3) 
+        $bills = Bill::with(['voucher', 'otherBills.product', 'status'])
+            ->where('id_user', $userId)
+            ->whereIn('id_status', [1, 2]) 
             ->get();
     
         $count = $bills->count();
     
-        return view('cart.completed_order', [
-            'bills' => $bills,
-            'count' => $count,
-        ]);
+        return view('cart.shipping_process', compact('bills', 'count'));
     }
     
 
     public function cancelledOrder()
     {
         $userId = Auth::id();
+        $statusCancelled = Status::where('name', 'Đã hủy')->value('id') ?? 0;
     
         $bills = Bill::where('id_user', $userId)
-            ->where('id_status', 0) 
+            ->where('id_status', $statusCancelled)
             ->get();
-    
-        $count = $bills->count();
     
         return view('cart.cancelled_order', [
             'bills' => $bills,
-            'count' => $count,
+            'count' => $bills->count(),
         ]);
     }
     
     public function cancelOrder($id)
-    {
-        $bill = Bill::find($id);
-    
-        if ($bill) {
-            if ($bill->id_status == 1) {
-                $bill->id_status = 0;
-                $bill->save();
-    
-                return redirect()->route('shipping_process')->with('success', 'Đơn hàng đã được hủy thành công.');
-            }
-    
-            return redirect()->route('shipping_process')->with('error', 'Đơn hàng không thể hủy.');
-        }
-    
+{
+    $bill = Bill::find($id);
+
+    if (!$bill) {
         return redirect()->route('shipping_process')->with('error', 'Đơn hàng không tồn tại.');
     }
-    
+
+    Log::info('Trạng thái đơn hàng trước khi hủy:', ['id_status' => $bill->id_status]);
+
+    if ($bill->id_status == 1) {
+        $bill->id_status = 0;
+        $bill->save();
+
+        return redirect()->route('shipping_process')->with('success', 'Đơn hàng đã được hủy thành công.');
+    }
+
+    return redirect()->route('shipping_process')->with('error', 'Đơn hàng không thể hủy.');
+}
+
+public function confirmReceived($id)
+{
+    $bill = Bill::find($id);
+
+    if (!$bill) {
+        return redirect()->route('shipping_process')->with('error', 'Đơn hàng không tồn tại.');
+    }
+
+    if ($bill->id_status == 2) { 
+        $bill->id_status = 3; 
+        $bill->save();
+
+        return redirect()->route('shipping_process')->with('success', 'Bạn đã xác nhận nhận hàng thành công.');
+    }
+
+    return redirect()->route('shipping_process')->with('error', 'Đơn hàng chưa thể xác nhận.');
+}
+
+    public function completedOrder()
+    {
+        $userId = Auth::id();
+
+        $bills = Bill::with(['otherBills', 'status']) // Lấy danh sách sản phẩm & trạng thái
+            ->where('id_user', $userId)
+            ->where('id_status', 3) 
+            ->get();
+            $count = $bills->count();
+
+        return view('cart.completed_order', compact('bills','count'));
+    }
+
+
     public function applyVoucher(Request $request)
     {
         $validated = $request->validate([

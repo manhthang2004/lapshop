@@ -18,9 +18,10 @@ class ProductController extends Controller
         $banners = Banner::where('status', true)->get();
         $products = Product::all();
         $topDiscountedProducts = Product::whereNotNull('discount')
-            ->orderBy('discount', 'desc')
-            ->limit(12)
-            ->get();
+        ->orderByRaw('(discount / price) DESC') 
+        ->limit(12)
+        ->get();
+
         $laptops =  Product::where('category_id', 3)->get();
         $gamingMice =  Product::where('category_id', 2)->get();
         $gamingKeyboards =  Product::where('category_id', 1)->get();
@@ -110,27 +111,37 @@ class ProductController extends Controller
 
         ]);
     }
+  
     public function submitComment(Request $request)
-{
-    $request->validate([
-        'comment' => 'required|string|max:1000',
-        'product_id' => 'required|exists:products,id'
-    ]);
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+            'product_id' => 'required|exists:products,id'
+        ]);
 
-    if (!Auth::check()) {
-        return redirect()->guest(route('login'))->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
+        $userId = Auth::check() ? Auth::id() : null;
+
+        if (!$userId) {
+            return redirect()->route('product.show', $request->input('product_id'))
+                ->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
+
+            if (!Auth::check()) {
+                return redirect()->guest(route('login'))->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
+            }
+
+            Comment::create([
+                'user_id' => Auth::id(),
+                'product_id' => $request->input('product_id'),
+                'comment' => $request->input('comment'),
+            ]);
+            return redirect()->route('product.show', ['id' => $request->input('product_id')])
+                ->with('success', 'Bình luận đã được gửi thành công!');
+        }
+
+
+        return redirect()->route('product.show', $request->input('product_id'))
+            ->with('success', 'Bình luận đã được gửi thành công!');
     }
-
-    Comment::create([
-        'user_id' => Auth::id(),
-        'product_id' => $request->input('product_id'),
-        'comment' => $request->input('comment'),
-    ]);
-
-    return redirect()->route('product.show', ['id' => $request->input('product_id')])
-                     ->with('success', 'Bình luận đã được gửi thành công!');
-}
-
     public function about()
     {
         return view('product.about');

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('quantity_pro');
             $table->integer('quantity_cart');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

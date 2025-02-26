@@ -61,7 +61,7 @@
                                         <tbody>
                                             @foreach($bill->otherBills as $item)
                                                 <tr>
-                                                    <td>{{ $item->product->pro_name }}</td>
+                                                    <td>{{ $item->name_pro }}</td>
                                                     <td>{{ $item->color_product }}</td>
                                                     <td>{{ $item->product->brand->name }}</td>
                                                     <td>{{ $item->quantity_pro }}</td>

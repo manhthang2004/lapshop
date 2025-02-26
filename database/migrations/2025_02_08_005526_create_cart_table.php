@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
             $table->decimal('total', 10, 2)->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
