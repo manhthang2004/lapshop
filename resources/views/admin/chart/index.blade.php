@@ -14,11 +14,11 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="startDate" class="form-label fw-bold">📅 Ngày bắt đầu:</label>
-                                <input type="date" id="startDate" class="form-control" value="{{ $labels[0] ?? date('Y-m-01') }}">
+                                <input type="date" id="startDate" class="form-control" value="{{ isset($labels) && count($labels) > 0 ? $labels[0] : date('Y-m-01') }}">
                             </div>
                             <div class="col-md-6">
                                 <label for="endDate" class="form-label fw-bold">📅 Ngày kết thúc:</label>
-                                <input type="date" id="endDate" class="form-control" value="{{ $labels[count($labels) - 1] ?? date('Y-m-d') }}">
+                                <input type="date" id="endDate" class="form-control" value="{{ isset($labels) && count($labels) > 0 ? $labels[count($labels) - 1] : date('Y-m-d') }}">
                             </div>
                         </div>
 
@@ -39,8 +39,8 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const labels = {!! json_encode($labels) !!};
-        const dataValues = {!! json_encode($data) !!};
+        const labels = {!! json_encode($labels ?? []) !!};
+        const dataValues = {!! json_encode($data ?? []) !!};
 
         const data = {
             labels: labels,

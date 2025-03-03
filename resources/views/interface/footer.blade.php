@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row text-white g-4">
         <div class="col-md-6 col-lg-3">
-          <a class="text-uppercase text-decoration-none brand text-white" href="index.html">MT Store</a>
+          <a class="text-uppercase text-decoration-none brand text-white" href="index.html">Gang Store</a>
           <p class="text-white mt-3">
             Là một thương hiệu cung cấp những sản phẩm công nghệ uy tín và chất lượng nhất
             đến cho mọi người, chúng tôi luôn không ngừng học hỏi và cải tiến từ những
@@ -89,12 +89,9 @@
     </div>
   </footer>
   </body>
-  <!-- end of footer -->
   
-  <!-- Messenger Plugin chat Code -->
   <div id="fb-root"></div>
   
-  <!-- Your Plugin chat code -->
   <div id="fb-customer-chat" class="fb-customerchat">
   </div>
   
@@ -104,7 +101,6 @@
     chatbox.setAttribute("attribution", "biz_inbox");
   </script>
   
-  <!-- Your SDK code -->
   <script>
     window.fbAsyncInit = function () {
       FB.init({
@@ -121,17 +117,12 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
   </script>
-  <!-- jquery -->
   <script src="{{ asset('js/script.js') }}"></script>
   <script src="{{ asset('js/jqery_3.7.1.js') }}"></script>
    
-  <!-- isotope js -->
   <script src="{{ asset('https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js')}}"></script>
-  <!-- bootstrap js -->
   <script src=" {{ asset('https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js')}}"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-  <!-- custom js -->
-  <!-- fontawesome cdn -->
   <script src="{{ asset('https://kit.fontawesome.com/9cc1e5b793.js')}}" crossorigin="anonymous"></script>
   
   </html>
