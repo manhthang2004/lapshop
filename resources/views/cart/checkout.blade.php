@@ -11,11 +11,10 @@
             </div>
 
             <div class="row">
-                <!-- Giỏ hàng -->
                 <div class="col-md-4 order-md-2 mb-4">
                     <div class="card border-light shadow-sm">
                         <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">Giỏ Hàng Của Bạn</h4>
+                            <h4 class="mb-0">Đơn Hàng Của Bạn</h4>
                             <span class="badge badge-light badge-pill float-right">{{ $cartItems->count() }}</span>
                         </div>
                         <ul class="list-group list-group-flush">
@@ -66,7 +65,6 @@
                     </div>
                 </div>
 
-                <!-- Thông tin thanh toán -->
                 <div class="col-md-8 order-md-1">
                     <div class="card border-light shadow-lg">
                         <div class="card-header bg-primary text-white">

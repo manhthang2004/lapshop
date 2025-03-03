@@ -3,7 +3,6 @@
 @section('content')
 <div class="container mt-4">
     <div class="row align-items-center">
-        <!-- Nội dung bên trái -->
         <div class="col-md-6">
             <h2 class="text-primary">Hướng Dẫn Thanh Toán</h2>
 
@@ -24,7 +23,6 @@
             <p class="mt-3">Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.</p>
         </div>
 
-        <!-- Hình ảnh bên phải -->
         <div class="col-md-6 text-center">
             <img src="{{ asset('/img/user/thanhtoan2.jpg') }}" class="img-fluid rounded shadow" alt="Hướng Dẫn Thanh Toán">
         </div>

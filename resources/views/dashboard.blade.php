@@ -13,7 +13,7 @@
                 <ul class="nav nav-pills flex-column">
                     @if (Auth::user()->role == 1)
                         <li class="nav-item">
-                            <a href="{{ route('admin.index') }}" class="nav-link d-flex align-items-center px-3 py-2">
+                            <a href="{{ route('admin.chart.index') }}" class="nav-link d-flex align-items-center px-3 py-2">
                                 <i class="fas fa-user-shield me-2"></i> Truy Cập Trang Admin
                             </a>
                         </li>

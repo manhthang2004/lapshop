@@ -11,11 +11,10 @@
 
                     <?php
                     if ($role > 0) {
-                        # code...
                     ?>
 
                         <li class="nav-item">
-                            <a href="./Duan/admin/index.php" class="nav-link link-dark ms-5">
+                            <a href="{{ route('admin.chart.index') }}" class="nav-link link-dark ms-5">
                                 Truy Cập Trang Admin
                             </a>
                         </li>

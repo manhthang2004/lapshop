@@ -20,7 +20,6 @@
         border-radius: 10px;
     }
 
-    /*Icon progressbar*/
     #progressbar {
         margin-bottom: 30px;
         overflow: hidden;
@@ -59,7 +58,6 @@
         padding: 0px;
     }
 
-    /*ProgressBar connectors*/
     #progressbar li:after {
         content: '';
         width: 100%;
@@ -100,7 +98,6 @@
         border-bottom-left-radius: 10px;
     }
 
-    /*Color number of the step and the connector before it*/
     #progressbar li.active:before,
     #progressbar li.active:after {
         background: #651FFF;
