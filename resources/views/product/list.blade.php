@@ -23,12 +23,10 @@
 
 <div class="container pb-3 mb-5" style="background-color: #f8f9fa; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
     <div class="row">
-        <!-- Filter Sidebar -->
         <div class="col-12 col-md-4 col-lg-3 col-xl-3 mt-4">
             <form action="{{ route('product.list') }}" method="GET" class="filter-form p-4">
                 @csrf
 
-                <!-- Hãng -->
                 <div class="mb-4">
                     <h5 class="filter-title">Hãng</h5>
                     <div class="list-group">
@@ -44,7 +42,6 @@
                 
                 <hr>
                 
-                <!-- Loại Sản Phẩm -->
                 <div class="mb-4">
                     <h5 class="filter-title">Loại Sản Phẩm</h5>
                     <div class="list-group">
@@ -66,10 +63,10 @@
                     Sắp Xếp
                 </button>
                 <ul class="dropdown-menu p-0">
-                    <li><a class="dropdown-item" href="#">Mới Nhất</a></li>
+                    <li><a class="dropdown-item" href="{{ route('product.list', ['load_type' => 'new']) }}">Mới Nhất</a></li>
                     <li><hr class="dropdown-divider m-0"></li>
-                    <li><a class="dropdown-item" href="#">Giá Từ Thấp -> Cao</a></li>
-                    <li><a class="dropdown-item" href="#">Giá Từ Cao -> Thấp</a></li>
+                    <li><a class="dropdown-item" href="{{ route('product.list', ['load_type' => 'price_up']) }}">Giá Từ Thấp -> Cao</a></li>
+                    <li><a class="dropdown-item" href="{{ route('product.list', ['load_type' => 'price_down']) }}">Giá Từ Cao -> Thấp</a></li>
                 </ul>
             </div>
         </div>

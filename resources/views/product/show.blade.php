@@ -181,9 +181,7 @@
                 <div class="comment-item mb-4 p-4 border border-primary rounded-lg bg-light shadow-md transition-transform transform hover:scale-105">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                                <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle border border-primary">
-                            </div>
+                            
                             <div>
                                 <strong>{{ optional($comment->user)->name ?? 'Người dùng ẩn danh' }}</strong>
                                 <small class="text-muted d-block">{{ $comment->created_at->format('d/m/Y') }}</small>

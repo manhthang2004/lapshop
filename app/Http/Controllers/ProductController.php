@@ -31,55 +31,47 @@ class ProductController extends Controller
     }
 
     public function list(Request $request)
-    {
-        $brandId = $request->input('brand');
-        $categoryId = $request->input('cate');
+{
+    $brandId = $request->input('brand');
+    $categoryId = $request->input('cate');
+    $loadType = $request->input('load_type');
 
-        $productsQuery = Product::with(['category', 'brand'])
-            ->join('category', 'products.category_id', '=', 'category.id')
-            ->join('brand', 'products.brand_id', '=', 'brand.id')
-            ->select('products.*', 'brand.name as brand_name', 'category.name as cate_name');
+    $query = Product::with(['category', 'brand'])
+        ->join('category', 'products.category_id', '=', 'category.id')
+        ->join('brand', 'products.brand_id', '=', 'brand.id')
+        ->select('products.*', 'brand.name as brand_name', 'category.name as cate_name');
 
-        if ($brandId && $brandId !== 'all') {
-            $productsQuery->where('products.brand_id', $brandId);
-        }
+    if ($brandId && $brandId !== 'all') {
+        $query->where('products.brand_id', $brandId);
+    }
 
-        if ($categoryId && $categoryId !== 'all') {
-            $productsQuery->where('products.category_id', $categoryId);
-        }
-
-        $products = $productsQuery->paginate(12);
-
-        $brands = Brand::select('id', 'name')->get();
-        $categories = Category::select('id', 'name')->get();
-
-        return view('product.list', compact('products', 'brands', 'categories'));
+    if ($categoryId && $categoryId !== 'all') {
+        $query->where('products.category_id', $categoryId);
     }
 
 
-    public function filter(Request $request)
-    {
-        $brandId = $request->input('brand');
-        $categoryId = $request->input('cate');
-
-        $query = Product::query()->with(['category', 'brand']);
-
-        if ($brandId !== 'all') {
-            $query->where('brand_id', $brandId);
+    if ($loadType) {
+        switch ($loadType) {
+            case 'new':
+                $query->orderBy('products.created_at', 'desc');
+                break;
+            case 'price_up':
+                $query->orderBy('products.price', 'asc');
+                break;
+            case 'price_down':
+                $query->orderBy('products.price', 'desc');
+                break;
         }
-
-        if ($categoryId !== 'all') {
-            $query->where('id_cate', $categoryId);
-        }
-
-        $products = $query->get();
-        $count = $products->count();
-
-        $brands = Brand::select('id', 'name')->get();
-        $categories = Category::select('id', 'name')->get();
-
-        return view('product.list', compact('products', 'brands', 'categories', 'count'));
     }
+
+    $products = $query->paginate(12);
+
+    $brands = Brand::select('id', 'name')->get();
+    $categories = Category::select('id', 'name')->get();
+
+    return view('product.list', compact('products', 'brands', 'categories'));
+}
+
 
 
 

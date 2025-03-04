@@ -51,12 +51,12 @@
               </a>
             </li>
             <li class="my-3">
-              <a href="index.php#blogs" class="text-white text-decoration-none">
+              <a href="{{route('about')}}" class="text-white text-decoration-none">
                 <i class="fas fa-chevron-right me-1"></i> Blogs
               </a>
             </li>
             <li class="my-3">
-              <a href="index.php#about" class="text-white text-decoration-none">
+              <a href="{{route('about')}}" class="text-white text-decoration-none">
                 <i class="fas fa-chevron-right me-1"></i> Giới Thiệu
               </a>
             </li>
