@@ -1,113 +1,111 @@
 @extends('admin.index')
 
 @section('content')
-<div class="content-body">
-    <div class="container-fluid">
-        <div class="row justify-content-center mt-4">
-            <div class="col-lg-8">
-                <div class="card shadow-lg border-0 rounded-lg">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h4 class="mb-0">📊 Thống Kê Doanh Thu</h4>
-                    </div>
-                    <div class="card-body">
-                        <!-- Chọn ngày -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="startDate" class="form-label fw-bold">📅 Ngày bắt đầu:</label>
-                                <input type="date" id="startDate" class="form-control" value="{{ isset($labels) && count($labels) > 0 ? $labels[0] : date('Y-m-01') }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="endDate" class="form-label fw-bold">📅 Ngày kết thúc:</label>
-                                <input type="date" id="endDate" class="form-control" value="{{ isset($labels) && count($labels) > 0 ? $labels[count($labels) - 1] : date('Y-m-d') }}">
-                            </div>
-                        </div>
+<div class="container-fluid my-4" style="max-width: 80%;">
+    <h2 class="text-center mb-4 fw-bold">📊 Thống Kê Tổng Quan</h2>
 
-                        <!-- Biểu đồ -->
-                        <div class="chart-container p-3" style="background: rgba(54, 162, 235, 0.1); border-radius: 10px;">
-                            <canvas id="revenueChart"></canvas>
-                        </div>
+    <div class="row g-4 text-center">
+        @php
+            $stats = [
+                ['title' => '📦 Tổng Đơn Hàng', 'value' => $totalOrders ?? '0', 'bg' => 'bg-primary'],
+                ['title' => '💰 Tổng Doanh Thu', 'value' => number_format($totalRevenue, 0, ',', '.') . ' VNĐ', 'bg' => 'bg-success'],
+                ['title' => '📈 Sản Phẩm Đã Bán', 'value' => $totalProductsSold ?? '0', 'bg' => 'bg-warning text-dark'],
+                ['title' => '👤 Tổng Người Dùng', 'value' => $totalUsers ?? '0', 'bg' => 'bg-danger']
+            ];
+        @endphp
+
+        @foreach($stats as $stat)
+            <div class="col-md-3 col-12">
+                <div class="card shadow border-0 {{ $stat['bg'] }} text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $stat['title'] }}</h5>
+                        <p class="display-6 fw-bold">{{ $stat['value'] }}</p>
                     </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <!-- Biểu đồ -->
+    <div class="row mt-5">
+        <div class="col-md-6 col-12">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-center">📊 Biểu Đồ Doanh Thu</h5>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-center">🔥 Sản Phẩm Bán Chạy</h5>
+                    <canvas id="topProductsChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Bảng chi tiết -->
+    <h3 class="mt-5 text-center">👀 Top 10 Sản Phẩm Được Click Nhiều Nhất</h3>
+    <div class="table-responsive">
+        <table class="table table-hover text-center mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Lượt Click</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($mostClickedProducts as $index => $product)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $product->name }}</td>
+                    <td>{{ $product->views }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="3" class="text-muted">Chưa có dữ liệu.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
-{{-- Thư viện Chart.js --}}
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const labels = {!! json_encode($labels ?? []) !!};
-        const dataValues = {!! json_encode($data ?? []) !!};
-
-        const data = {
-            labels: labels,
-            datasets: [{
-                label: '📈 Doanh Thu (VNĐ)',
-                data: dataValues,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        const config = {
+    document.addEventListener("DOMContentLoaded", function () {
+        const revenueCtx = document.getElementById("revenueChart").getContext("2d");
+        new Chart(revenueCtx, {
             type: "bar",
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#1A1A1A',
-                        titleColor: '#fff',
-                        bodyColor: '#fff'
-                    }
-                },
-                scales: {
-                    x: {
-                        type: "category",
-                        ticks: {
-                            color: "#333",
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: "#333",
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
+            data: {
+                labels: {!! json_encode($topProducts->pluck('name')) !!},
+                datasets: [{
+                    label: "Doanh Thu (VNĐ)",
+                    data: {!! json_encode($topProducts->pluck('total_revenue')) !!},
+                    backgroundColor: "rgba(54, 162, 235, 0.6)",
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
             }
-        };
-
-        const revenueChart = new Chart(document.getElementById("revenueChart"), config);
-
-        // Cập nhật ngày bắt đầu
-        document.getElementById("startDate").addEventListener("change", function() {
-            revenueChart.options.scales.x.min = this.value;
-            revenueChart.update();
         });
 
-        // Cập nhật ngày kết thúc
-        document.getElementById("endDate").addEventListener("change", function() {
-            revenueChart.options.scales.x.max = this.value;
-            revenueChart.update();
+        const topProductsCtx = document.getElementById("topProductsChart").getContext("2d");
+        new Chart(topProductsCtx, {
+            type: "doughnut",
+            data: {
+                labels: {!! json_encode($topProducts->pluck('name')) !!},
+                datasets: [{
+                    data: {!! json_encode($topProducts->pluck('total_quantity')) !!},
+                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"],
+                    hoverOffset: 4
+                }]
+            }
         });
     });
 </script>
-
 @endsection

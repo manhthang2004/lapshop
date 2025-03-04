@@ -75,55 +75,59 @@ class ProductController extends Controller
 
 
 
-    public function show($id, Request $request)
-    {
-        $product = Product::findOrFail($id);
-        $comments = Comment::where('product_id', $id)->get();
+public function show($id, Request $request)
+{
+    $product = Product::findOrFail($id);
+    
+    // Tăng lượt xem (views)
+    $product->increment('views');
 
-        $colorPro = $request->query('color') ? ColorProduct::find($request->query('color')) : null;
+    $comments = Comment::where('product_id', $id)->get();
+    $colorPro = $request->query('color') ? ColorProduct::find($request->query('color')) : null;
 
-        $relatedProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $id)
-            ->limit(3)
-            ->get();
+    $relatedProducts = Product::where('category_id', $product->category_id)
+        ->where('id', '!=', $id)
+        ->limit(3)
+        ->get();
 
+    $price_format = number_format($product->price, 0, ',', '.');
+    $discount_format = $product->discount ? number_format($product->price * (1 - $product->discount / 100), 0, ',', '.') : $price_format;
+    $newprice_format = $discount_format;
 
-        $price_format = number_format($product->price, 0, ',', '.');
-        $discount_format = $product->discount ? number_format($product->price * (1 - $product->discount / 100), 0, ',', '.') : $price_format;
-        $newprice_format = $discount_format;
-
-        return view('product.show', [
-            'product' => $product,
-            'colorPro' => $colorPro,
-            'relatedProducts' => $relatedProducts,
-            'price_format' => $price_format,
-            'discount_format' => $discount_format,
-            'newprice_format' => $newprice_format,
-            'comments' => $comments
-
-        ]);
-    }
+    return view('product.show', [
+        'product' => $product,
+        'colorPro' => $colorPro,
+        'relatedProducts' => $relatedProducts,
+        'price_format' => $price_format,
+        'discount_format' => $discount_format,
+        'newprice_format' => $newprice_format,
+        'comments' => $comments
+    ]);
+}
   
-    public function submitComment(Request $request)
-    {
-        $request->validate([
-            'comment' => 'required|string|max:1000',
-            'product_id' => 'required|exists:products,id'
-        ]);
-    
-        if (!Auth::check()) {
-            return redirect()->guest(route('login'))->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
-        }
-    
-        Comment::create([
-            'user_id' => Auth::id(),
-            'product_id' => $request->input('product_id'),
-            'comment' => $request->input('comment'),
-        ]);
-    
+public function submitComment(Request $request)
+{
+    $request->validate([
+        'comment' => 'required|string|max:1000', 
+        'product_id' => 'required|exists:products,id'
+    ]);
+
+    $userId = Auth::check() ? Auth::id() : null;
+
+    if (!$userId) {
         return redirect()->route('product.show', $request->input('product_id'))
-            ->with('success', 'Bình luận đã được gửi thành công!');
+                         ->with('error', 'Bạn cần đăng nhập để gửi bình luận!');
     }
+
+    Comment::create([
+        'user_id' => $userId,
+        'product_id' => $request->input('product_id'),
+        'comment' => $request->input('comment'),
+    ]);
+
+    return redirect()->route('product.show', $request->input('product_id'))
+                     ->with('success', 'Bình luận đã được gửi thành công!');
+}
     
     public function about()
     {

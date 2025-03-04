@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
-
+    Route::get('/admin/chart', [ProductController::class, 'statistics'])->name('admin.statistics');
     // Voucher
     Route::get('/vouchers', [CartController::class, 'voucherIndex'])->name('admin.vouchers.index');
     Route::get('/vouchers/create', [CartController::class, 'voucherCreate'])->name('admin.vouchers.create');
