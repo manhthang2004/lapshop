@@ -185,7 +185,7 @@
                                 <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle border border-primary">
                             </div>
                             <div>
-                                <strong>{{ $comment->user->name }}</strong>
+                                <strong>{{ optional($comment->user)->name ?? 'Người dùng ẩn danh' }}</strong>
                                 <small class="text-muted d-block">{{ $comment->created_at->format('d/m/Y') }}</small>
                             </div>
                         </div>
@@ -197,21 +197,25 @@
             @endforelse
         </div>
     
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{{ route('submit_comment') }}" method="POST" class="p-4 border border-primary rounded-lg bg-light shadow-md transition-transform transform hover:scale-105">
-                    @csrf
-                    <div class="form-group mb-4">
-                        <label for="comment" class="form-label text-primary">Bình luận:</label>
-                        <textarea class="form-control border-0 rounded-lg shadow-sm" id="comment" name="comment" rows="5" placeholder="Nhập bình luận của bạn" required></textarea>
-                    </div>
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 py-2">Gửi Bình Luận</button>
-                </form>
+        @auth
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="{{ route('submit_comment') }}" method="POST" class="p-4 border border-primary rounded-lg bg-light shadow-md transition-transform transform hover:scale-105">
+                        @csrf
+                        <div class="form-group mb-4">
+                            <label for="comment" class="form-label text-primary">Bình luận:</label>
+                            <textarea class="form-control border-0 rounded-lg shadow-sm" id="comment" name="comment" rows="5" placeholder="Nhập bình luận của bạn" required></textarea>
+                        </div>
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 py-2">Gửi Bình Luận</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        @else
+            <p class="text-center text-danger">Bạn cần <a href="{{ route('login') }}" class="text-primary">đăng nhập</a> để gửi bình luận.</p>
+        @endauth
     </div>
+    
     
     
     
