@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-8 mb-3">
@@ -72,6 +73,8 @@
         </div>
 
         <div class="col-12 col-md-8 col-lg-9 col-xl-9 mt-4">
+            
+    
             <div class="row">
                 @foreach ($products as $pro)
                     <div class="col-6 col-md-4 col-lg-3 mb-4">
@@ -110,7 +113,6 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center mt-3">
                     @if ($products->onFirstPage())

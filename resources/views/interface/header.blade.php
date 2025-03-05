@@ -91,16 +91,16 @@
     </div>
   </nav>
 
-  <!-- Form Tìm Kiếm -->
-  <div id="searchBox" class="container searchBox p-0 mb-4">
-    <form action="" method="POST">
-      @csrf
-      <div class="input-group">
-        <input type="search" name="kyw" class="form-control" placeholder="Tìm Kiếm Sản Phẩm...">
-        <input class="searchBoxButton" type="submit" name="btn_search" value="Tìm">
-      </div>
-    </form>
-  </div>
+  <form action="{{ route('product.search') }}" method="GET">
+    <div class="input-group">
+        <input type="search" name="kyw" class="form-control" placeholder="Tìm kiếm sản phẩm..." value="{{ request('kyw') }}">
+        <input type="hidden" name="brand" value="{{ request('brand') }}">
+        <input type="hidden" name="cate" value="{{ request('cate') }}">
+        <input type="hidden" name="load_type" value="{{ request('load_type') }}">
+        <button class="btn btn-primary" type="submit">Tìm</button>
+    </div>
+</form>
+
 
 </body>
 

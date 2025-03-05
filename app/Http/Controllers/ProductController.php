@@ -79,7 +79,6 @@ public function show($id, Request $request)
 {
     $product = Product::findOrFail($id);
     
-    // Tăng lượt xem (views)
     $product->increment('views');
 
     $comments = Comment::where('product_id', $id)->get();
@@ -137,4 +136,52 @@ public function submitComment(Request $request)
     {
         return view('product.payment_guide');
     }
+
+
+    public function search(Request $request)
+    {
+        $keyword = $request->query('kyw');
+        $brandId = $request->input('brand');
+        $categoryId = $request->input('cate');
+        $loadType = $request->input('load_type');
+    
+        $query = Product::with(['category', 'brand'])
+            ->join('category', 'products.category_id', '=', 'category.id')
+            ->join('brand', 'products.brand_id', '=', 'brand.id')
+            ->select('products.*', 'brand.name as brand_name', 'category.name as cate_name');
+    
+        if ($keyword) {
+            $query->where('products.pro_name', 'LIKE', "%{$keyword}%");
+        }
+    
+        if ($brandId && $brandId !== 'all') {
+            $query->where('products.brand_id', $brandId);
+        }
+    
+        if ($categoryId && $categoryId !== 'all') {
+            $query->where('products.category_id', $categoryId);
+        }
+    
+        if ($loadType) {
+            switch ($loadType) {
+                case 'new':
+                    $query->orderBy('products.created_at', 'desc');
+                    break;
+                case 'price_up':
+                    $query->orderBy('products.price', 'asc');
+                    break;
+                case 'price_down':
+                    $query->orderBy('products.price', 'desc');
+                    break;
+            }
+        }
+    
+        $products = $query->paginate(12);
+        $brands = Brand::select('id', 'name')->get();
+        $categories = Category::select('id', 'name')->get();
+    
+        return view('product.list', compact('products', 'brands', 'categories', 'keyword'));
+    }
+    
+    
 }

@@ -61,7 +61,6 @@
     </script>
     
 
-
     <div id="sale" class="container pb-3 my-5"
         style="background-image: linear-gradient(to right, #0E2241 , #ff7300); border-radius: 10px; box-shadow: 0px 0px 5px gray;">
         <div class="row p-0">
@@ -124,7 +123,6 @@
         </nav>
     </div>
 
-    <!-- Danh mục Laptop -->
     <div id="products" class="container pb-3"
         style="background-color: white; border-radius: 10px; box-shadow: 0px 0px 5px gainsboro;">
         <div class="row p-0">
@@ -185,7 +183,6 @@
         </nav>
     </div>
 
-    <!-- Danh mục Chuột Gaming -->
     <div id="products" class="container pb-3 my-5"
         style="background-color: white; border-radius: 10px; box-shadow: 0px 0px 5px gainsboro;">
         <div class="row p-0">
@@ -246,7 +243,6 @@
         </nav>
     </div>
 
-    <!-- Danh mục Bàn Phím Gaming -->
     <div id="products" class="container pb-3 my-5"
         style="background-color: white; border-radius: 10px; box-shadow: 0px 0px 5px gainsboro;">
         <div class="row p-0">
@@ -307,7 +303,6 @@
         </nav>
     </div>
 
-    <!-- Danh mục Tai Nghe -->
     <div id="products" class="container pb-3 my-5"
         style="background-color: white; border-radius: 10px; box-shadow: 0px 0px 5px gainsboro;">
         <div class="row p-0">
@@ -369,7 +364,6 @@
     </div>
 
 
-    <!-- ------------------------------------------------------------------------------------------------------------------------- Banner Quảng Cáo ------------ -->
     <section id="offers" class="py-5">
         <div class="container">
             <div
@@ -383,7 +377,6 @@
         </div>
     </section>
 
-    <!-- blogs -->
     <div class="container my-5" style="background-color: white; border-radius: 10px; box-shadow: 0px 0px 5px gainsboro;">
         <section id="blogs">
             <div class="container">
@@ -449,9 +442,7 @@
         </section>
     </div>
 
-    <!-- end of blogs -->
 
-    <!-- ------------------------------------------------------------------------------------------------------------------------------- Giới Thiệu ------------ -->
     <section id="about" class="py-5">
         <div class="container">
             <div class="row gy-lg-5 align-items-center">
@@ -460,7 +451,7 @@
                         <h2 class="position-relative d-inline-block ms-4 text-white">GIỚI THIỆU</h2>
                     </div>
                     <p class="lead text-white">
-                        MT Store - Một sàn thương mại điện tử về công nghệ
+                        Gang Store - Một sàn thương mại điện tử về công nghệ
                     </p>
                     <p class="text-white">
                         Với mong muốn cung cấp những sản phẩm công nghệ uy tín và chất lượng nhất đến cho mọi người, chúng
@@ -481,7 +472,6 @@
  
 
     <a href="#" class="to-top" onclick="scrollToTop();"><i class="fa-solid fa-angle-up"></i></a>
-    <!-- End Scroll To Top -->
     <script type="text/javascript">
         window.addEventListener("scroll", function() {
             var scroll = document.querySelector(".to-top");

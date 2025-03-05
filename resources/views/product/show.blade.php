@@ -2,7 +2,6 @@
 
 @section('content')
 @php
-    // Định dạng giá
     $price_format = number_format($product->price, 0, '.', '.');
     $discount_format = number_format($product->price - $product->discount, 0, '.', '.');
     $sale = $product->discount ? ($product->discount / $product->price) * 100 : 0;
@@ -12,6 +11,11 @@
 
 
     <div class="container mt-3">
+        @if (session('error'))
+                <div class="alert alert-danger">
+                {{ session('error') }}
+                </div>
+            @endif
         <div class="row">
             <div class="col-md-12 mb-3">
                 <nav aria-label="breadcrumb">

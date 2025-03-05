@@ -26,7 +26,6 @@
         @endforeach
     </div>
 
-    <!-- Biểu đồ -->
     <div class="row mt-5">
         <div class="col-md-6 col-12">
             <div class="card shadow border-0">
@@ -46,7 +45,6 @@
         </div>
     </div>
 
-    <!-- Bảng chi tiết -->
     <h3 class="mt-5 text-center">👀 Top 10 Sản Phẩm Được Click Nhiều Nhất</h3>
     <div class="table-responsive">
         <table class="table table-hover text-center mt-3">
@@ -74,7 +72,6 @@
     </div>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

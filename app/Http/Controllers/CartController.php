@@ -44,7 +44,7 @@ class CartController extends Controller
     public function add(Request $request)
 {
     if (!Auth::check()) {
-        return redirect()->back()->with('error', 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
+        return redirect()->back()->with('error', 'Vui lòng đăng nhập để ssử dụng dịch vụ .');
     }
 
     $userId = Auth::id();

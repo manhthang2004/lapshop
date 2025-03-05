@@ -12,21 +12,14 @@ use Illuminate\Support\Facades\DB;
 class ChartController extends Controller
 {
     public function index() {
-        // Tổng số đơn hàng
         $totalOrders = Bill::count();
 
-        // Tổng doanh thu (chỉ tính đơn đã hoàn thành)
-        $totalRevenue = Bill::where('id_status', 1)->sum('total');
+        $totalRevenue = Bill::where('id_status', 3)->sum('total');
 
-
-
-        // Tổng số sản phẩm đã bán
         $totalProductsSold = DB::table('other_bill')->sum('quantity_pro');
 
-        // Tổng số người dùng (Users)
         $totalUsers = User::count();
 
-        // Lấy top 10 sản phẩm bán chạy nhất
         $topProducts = DB::table('other_bill')
             ->select('name_pro as name', 
                      DB::raw('SUM(quantity_pro) as total_quantity'), 
@@ -36,13 +29,11 @@ class ChartController extends Controller
             ->limit(10)
             ->get();
 
-        // Lấy top 10 sản phẩm được click nhiều nhất
         $mostClickedProducts = Product::orderByDesc('views')
             ->select('pro_name as name', 'views')
             ->limit(10)
             ->get();
 
-        // Trả dữ liệu về view
         return view('admin.chart.index', compact('totalOrders', 'totalRevenue', 'totalProductsSold', 'totalUsers', 'topProducts', 'mostClickedProducts'));
     }
 }

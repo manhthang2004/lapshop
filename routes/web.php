@@ -33,6 +33,8 @@ Route::get('/', [ProductController::class, 'index'])->name('product.index');
 Route::get('product/{id}/{color_id?}', [ProductController::class, 'show'])->name('product.show');
 Route::post('/product/review', [ProductController::class, 'review'])->name('product.review');
 
+Route::get('/search', [ProductController::class, 'search'])->name('product.search');
+
 Route::post('/comments/submit', [ProductController::class, 'submitComment'])->name('submit_comment');
 Route::get('/sanpham/list', [ProductController::class, 'list'])->name('product.list');
 Route::post('/sanpham/filter', [ProductController::class, 'filter'])->name('product.filter');

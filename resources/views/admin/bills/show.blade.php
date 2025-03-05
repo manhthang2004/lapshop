@@ -53,7 +53,6 @@
                                             <tr>
                                                 <th>Tên Sản Phẩm</th>
                                                 <th>Màu</th>
-                                                <th>Hãng Sản Phẩm</th>
                                                 <th>Số Lượng</th>
                                                 <th>Giá</th>
                                             </tr>
@@ -63,7 +62,6 @@
                                                 <tr>
                                                     <td>{{ $item->name_pro }}</td>
                                                     <td>{{ $item->color_product }}</td>
-                                                    <td>{{ $item->product->brand->name }}</td>
                                                     <td>{{ $item->quantity_pro }}</td>
                                                     <td>{{ number_format($item->price_pro, 0, '.', '.') }}đ</td>
                                                 </tr>
